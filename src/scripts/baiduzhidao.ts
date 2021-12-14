@@ -3,7 +3,6 @@ import axios from 'axios';
 import * as iconv from 'iconv-lite';
 import fs from 'fs';
 import path from 'path';
-import qs from 'qs';
 
 const searchBaseUrl =
   'https://zhidao.baidu.com/search?lm=0&rn=10&pn=0&fr=search&ie=gbk&dyTabStr=null&word=';

@@ -5,6 +5,7 @@ const path = require('path');
 const multer = require('multer');
 const Transform = require('./transform');
 let TransformWs = null;
+
 const port = 8040;
 // parsing multipart/form-data
 app.use(
@@ -59,86 +60,9 @@ app.post('/test', function (req, res, next) {
   });
 });
 
-// TODO: merge
-// app.get('/merge/:md5', function (req, res, next) {
-//   const params = req.params
-//   const query = req.query
-//   const { md5 } = params
-//   const { filename } = query
-//   console.log(filename)
-//   const result = UploadMethod.mergeTempBy(md5, filename, redisClient)
-//   res.send(result)
-//   // res.send(' ok ')
-// })
-
-// // TODO: get md5 info
-// const getFileDataBy = (md5) => {}
-// app.get('/md5/:md5', function (req, res, next) {
-//   var params = req.params
-//   const { md5 } = params
-//   UploadMethod.getFileInfoBy(md5, redisClient, res)
-// })
-
-app.get('/transform/:md5/:filename', function (req, res, next) {
-  const params = req.params;
-  const { md5, filename } = params;
-
-  Transform({ md5, filename }, res, TransformWs);
-  res.send({
-    code: 200,
-    msg: 'Transforming',
-  });
-  // res.send(' ok ')
-});
-// websocket 独立出去
-
 app.get('/', function (req, res, next) {
   console.log('get route ---- ', req.testing);
   res.end();
-});
-
-app.ws('/transfm', function (ws, req) {
-  TransformWs = ws;
-  ws.on('message', function (msg) {
-    console.log('msg', msg);
-    try {
-      const obj = JSON.parse(msg);
-      if (typeof obj === 'object') {
-        console.log(obj.a);
-        if (obj.a === '3') {
-          ws.send(JSON.stringify({ data: '我知道啦' }));
-        }
-      }
-    } catch (error) {
-      ws.send('gocha!!!');
-    }
-  });
-  console.log('socket established  ', req.testing);
-});
-app.ws('/user/:userid', function (ws, req) {
-  TransformWs = ws;
-  var params = req.params;
-  const { userid } = params;
-  console.log(' userid ', userid);
-  ws.on('close', function () {
-    console.log(' closed ');
-  });
-  ws.on('message', function (msg) {
-    // console.log('msg', msg)
-    // console.log(expressWs.getWss().clients)
-    try {
-      const obj = JSON.parse(msg);
-      if (typeof obj === 'object') {
-        console.log(obj.a);
-        if (obj.a === '3') {
-          ws.send(JSON.stringify({ data: '我知道啦' }));
-        }
-      }
-    } catch (error) {
-      ws.send('gocha!!!');
-    }
-  });
-  console.log(' / socket', req.testing);
 });
 
 // http

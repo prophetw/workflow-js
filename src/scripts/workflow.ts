@@ -246,7 +246,7 @@ class Workflow {
     randsk: string; // 密码解密之后的
     fsidlist: string[];
   }): Promise<string> {
-    // TODO: check token
+    // TODO: check token 1month
     // 转存的时候需要 baidu 的 token 需要存储的目录
     // use shareid + uk + fileList info  to save to your own netdisk
     const url = `https://pan.baidu.com/rest/2.0/xpan/share?method=transfer&access_token=${token}&shareid=${share_id}&from=${uk}`;
@@ -254,7 +254,6 @@ class Workflow {
     const result = await axios.post(url, raw, {
       headers: {
         Referer: 'pan.baidu.com',
-        // 'content-type': 'application/x-www-form-urlencoded',
       },
     });
     console.log(result);
