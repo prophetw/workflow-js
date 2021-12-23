@@ -26,11 +26,10 @@ class Workflow {
     this.tasks = [];
     this.keyword = '';
     this.status = JobStatus.WAITING;
-    this.init();
   }
   async init() {
     // throw 'sub implements this interface';
-    const word = '钢铁侠3百度网盘';
+    const word = '无人生还2015百度网盘';
     this.keyword = word.slice(0, word.indexOf('百度网盘'));
     const eWord = iconv.encode(word, 'gbk').toString('binary');
 
@@ -51,7 +50,7 @@ class Workflow {
           return href;
         })
         .filter((href): href is string => href !== undefined);
-      console.log(hrefAry);
+      console.log(' href ary ', hrefAry);
       this.tasks = hrefAry;
     }
     // get url html
@@ -87,6 +86,7 @@ class Workflow {
             return info;
           });
           // await task.run()
+          console.log(dataAry);
           const rr = await this.goThrough(dataAry);
           if (rr) {
             this.status = JobStatus.RESOLVED;
@@ -206,15 +206,24 @@ class Workflow {
       // list 包含了 具体的信息 转存需要 list_item 的 fs_id
       const fsidlist = list
         .map(
-          (item: { fs_id: string; size: string; server_filename: string }) => {
-            const { server_filename, size, fs_id } = item;
+          (item: {
+            fs_id: string;
+            size: string;
+            server_filename: string;
+            isdir: string;
+          }) => {
+            const { isdir, server_filename, size, fs_id } = item;
             console.log('server_filename : ', server_filename);
             console.log('size :', size);
+            console.log('isdir :', !!isdir);
             // if(mediaType==='video')
             if (server_filename.indexOf(this.keyword) > -1) {
               return fs_id;
             }
-            if (size === '0') return undefined;
+            if (size === '0' && isdir !== '1') return undefined;
+            // folder name same  maybe
+            // TODO: filter name exactly wrong name
+            // wrong name e.g  search abcd.mv give me  ghij.mv
             return fs_id;
           },
         )
