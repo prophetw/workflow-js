@@ -40,7 +40,7 @@ class Workflow {
   }
   async init() {
     // throw 'sub implements this interface';
-    this.keyword = '游戏之夜';
+    this.keyword = '新·福音战士剧场版：终';
     // this.keyword = word.slice(0, word.indexOf('百度网盘'));
     // const eWord = iconv.encode(word, 'gbk').toString('binary');
     const eWord = encodeURIComponent(this.keyword);
@@ -99,21 +99,26 @@ class Workflow {
           const children = spanContainer.children();
           const dataAry = Array.from(children);
           const result = dataAry.map((node, index) => {
-            if ($(node).find('a').text() === '百度网盘') {
-              console.log(' qqq ');
-              const baiduLink = $(node).find('a').attr('href') || '';
-              const baiduCode = node.next;
-              let code = '';
-              if (baiduCode) {
-                code = $(baiduCode).text();
+            const aLinkAry = Array.from($(node).find('a'));
+            let sss: BaiduLink | undefined;
+            aLinkAry.map((aNode) => {
+              if ($(aNode).text() === '百度网盘') {
+                console.log(' qqq ');
+                const baiduLink = $(aNode).attr('href') || '';
+                const baiduCode = aNode.parent?.next;
+                let code = '';
+                if (baiduCode) {
+                  code = $(baiduCode).text();
+                }
+                const r: BaiduLink = {
+                  sharelink: baiduLink,
+                  pwd: code,
+                };
+                sss = r;
               }
-              const re: BaiduLink = {
-                sharelink: baiduLink,
-                pwd: code,
-              };
-              return re;
-            }
-            return undefined;
+            });
+
+            return sss;
           });
           const resu: BaiduLink[] = result.filter((n): n is BaiduLink => {
             return n !== undefined;
